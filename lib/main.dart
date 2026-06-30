@@ -16,6 +16,9 @@ void main() {
   runApp(const LabelPrinterApp());
 }
 
+// ============================================================================
+// BACKGROUND THREAD WORKER (Excel Parsing)
+// ============================================================================
 Map<String, Map<String, String>> parseExcelInIsolate(Uint8List bytes) {
   var excel = Excel.decodeBytes(bytes);
   Map<String, Map<String, String>> newInventory = {};
@@ -31,13 +34,17 @@ Map<String, Map<String, String>> parseExcelInIsolate(Uint8List bytes) {
           "name": row.length > 1 && row[1] != null ? row[1]!.value.toString() : "Unknown Name",
           "sku": row.length > 0 && row[0] != null ? row[0]!.value.toString() : "NO-ALU",
           "price": row.length > 4 && row[4] != null ? row[4]!.value.toString() : "0.00",
-          "was_price": "0.00",
+          // Safely checks the 6th column (Index 5) for Was Price
+          "was_price": row.length > 5 && row[5] != null && row[5]!.value.toString().trim().isNotEmpty
+              ? row[5]!.value.toString().trim()
+              : "0.00",
         };
       }
     }
   }
   return newInventory;
 }
+// ============================================================================
 
 class LabelPrinterApp extends StatelessWidget {
   const LabelPrinterApp({Key? key}) : super(key: key);
@@ -57,7 +64,7 @@ class LabelPrinterApp extends StatelessWidget {
 }
 
 // ============================================================================
-// UPDATED: PERMISSION SPLASH SCREEN
+// PERMISSION SPLASH SCREEN
 // ============================================================================
 class PermissionSplashScreen extends StatefulWidget {
   const PermissionSplashScreen({Key? key}) : super(key: key);
@@ -80,7 +87,6 @@ class _PermissionSplashScreenState extends State<PermissionSplashScreen> {
     bool btConnect = await Permission.bluetoothConnect.isGranted;
     bool location = await Permission.location.isGranted;
 
-    // --- FIX: Dynamic check based on your manifest ---
     // If Android 12+, btScan and btConnect are enough.
     // If Android 11 or older, Location is used.
     if ((btScan && btConnect) || location) {
@@ -101,7 +107,6 @@ class _PermissionSplashScreenState extends State<PermissionSplashScreen> {
     bool btConnect = statuses[Permission.bluetoothConnect]?.isGranted ?? false;
     bool location = statuses[Permission.location]?.isGranted ?? false;
 
-    // --- FIX: Dynamic check based on your manifest ---
     if ((btScan && btConnect) || location) {
       _navigateToHome();
     } else {
