@@ -32,12 +32,14 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.8
   barcode: ^2.2.6
-  file_picker: ^8.0.0  # ADD THIS
-  excel: ^4.0.3        # ADD THIS
-  path_provider: ^2.1.3      # ADD THIS (Gives access to internal app storage)
-  shared_preferences: ^2.2.3 # ADD THIS (Remembers that you saved a file)
-  permission_handler: ^11.3.1
-  # No external printer plugins here! The native layer handles it.
+  file_picker: ^8.0.0
+  excel: ^4.0.3
+  path_provider: ^2.1.3      # (Gives access to internal app storage)
+  shared_preferences: ^2.2.3 # (Remembers that you saved a file)
+  permission_handler: ^11.3.1 # No external printer plugins here! The native layer handles it.
+  sqflite: ^2.3.0             # The SQLite Engine
+  path: ^1.9.0                # Safely creates database file paths
+  http: ^1.6.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
